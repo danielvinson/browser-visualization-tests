@@ -6,7 +6,7 @@
   "author": "Daniel Vinson <danielvinson@gmail.com>",
   "scripts": {
     "dev": "parcel src/index.html",
-    "build": "$(npm bin)/parcel build ./src/index.html"
+    "build": "$(npm bin)/parcel build ./src/index.html -d docs"
   },
   "dependencies": {
     "@types/react": "^17.0.2",
