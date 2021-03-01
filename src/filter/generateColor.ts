@@ -47,31 +47,44 @@ type TupleOf<T, N extends number> = number extends N
 
 type RangeOf<N extends number> = Partial<TupleOf<unknown, N>>["length"];
 
-type Percent = RangeOf<100>;
-type Alpha = RangeOf<1>;
-type Degree = number; // Technically unbound since it will wrap
-type RGBValue = RangeOf<256>;
+export type RGBValue = RangeOf<256>;
+export type RGBRange = {
+  min: RGBValue;
+  max: RGBValue;
+};
 
-type RGBRange = [RGBValue, RGBValue];
-type Hue = Degree;
-type HueRange = [Degree, Degree];
-type PercentRange = [Percent, Percent];
-type AlphaRange = [Alpha, Alpha];
-type DegreeRange = [Degree, Degree];
+type Degree = number; // Technically unbound since it will wrap
+export type Hue = Degree;
+export type HueRange = {
+  readonly min: Hue;
+  readonly max: Hue;
+};
+
+export type Percent = RangeOf<100>;
+export type PercentRange = {
+  readonly min: Percent;
+  readonly max: Percent;
+};
+
+export type Alpha = number; // RangeOf<1> doesn't work?
+export type AlphaRange = {
+  readonly min: Alpha;
+  readonly max: Alpha;
+};
 
 type Value = Percent | Alpha | Degree | RGBValue;
-type Range = PercentRange | AlphaRange | DegreeRange | RGBRange;
+type Range = PercentRange | AlphaRange | HueRange | RGBRange;
 
 const isRange = (value: Value | Range): value is Range => {
-  return typeof value === "number";
+  return typeof value !== "number";
 };
 
 // Generate RGBA
 interface RGBARange {
-  readonly red: RGBValue | RGBRange;
-  readonly green: RGBValue | RGBRange;
-  readonly blue: RGBValue | RGBRange;
-  readonly alpha: Alpha;
+  readonly red?: RGBValue | RGBRange;
+  readonly green?: RGBValue | RGBRange;
+  readonly blue?: RGBValue | RGBRange;
+  readonly alpha?: Alpha | AlphaRange;
 }
 export const generateColorRGBA = ({ red, green, blue, alpha }: RGBARange) => {
   const [redValue, blueValue, greenValue] = [red, green, blue].map((color) => {
@@ -80,7 +93,7 @@ export const generateColorRGBA = ({ red, green, blue, alpha }: RGBARange) => {
     }
 
     if (isRange(color)) {
-      return randomIntegerInRange(color[0], color[1]);
+      return randomIntegerInRange(color.min, color.max);
     }
 
     return color;
@@ -92,13 +105,13 @@ export const generateColorRGBA = ({ red, green, blue, alpha }: RGBARange) => {
     }
 
     if (isRange(alpha)) {
-      return randomFloatInRange(alpha[0], alpha[1], 5);
+      return randomFloatInRange(alpha.min, alpha.max, 5);
     }
 
     return alpha;
   });
 
-  return `rgba(${redValue}, ${blueValue}, ${greenValue}, ${alphaValue}`;
+  return `rgba(${redValue}, ${blueValue}, ${greenValue}, ${alphaValue})`;
 };
 
 // Generate HSLA
@@ -120,7 +133,7 @@ export const generateColorHSLA = ({
     }
 
     if (isRange(hue)) {
-      return randomIntegerInRange(hue[0], hue[1]);
+      return randomIntegerInRange(hue.min, hue.max);
     }
 
     return hue;
@@ -133,7 +146,7 @@ export const generateColorHSLA = ({
       }
 
       if (isRange(value)) {
-        return randomIntegerInRange(value[0], value[1]);
+        return randomIntegerInRange(value.min, value.max);
       }
 
       return value;
@@ -146,11 +159,11 @@ export const generateColorHSLA = ({
     }
 
     if (isRange(alpha)) {
-      return randomFloatInRange(alpha[0], alpha[1], 5);
+      return randomFloatInRange(alpha.min, alpha.max, 5);
     }
 
     return alpha;
   });
 
-  return `hsla(${hueValue}, ${saturationValue}, ${lightnessValue}, ${alphaValue}`;
+  return `hsla(${hueValue}, ${saturationValue}, ${lightnessValue}, ${alphaValue})`;
 };
