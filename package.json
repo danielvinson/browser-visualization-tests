@@ -1,0 +1,19 @@
+{
+  "name": "browser-visualization-tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:danielvinson/browser-visualization-tests.git",
+  "author": "Daniel Vinson <danielvinson@gmail.com>",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "build": "$(npm bin)/parcel build ./src/index.html"
+  },
+  "dependencies": {
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
+    "parcel-bundler": "^1.12.4",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "typescript": "^4.2.2"
+  }
+}
