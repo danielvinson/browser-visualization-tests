@@ -5,7 +5,7 @@ import { Noise } from "~/filter/CanvasNoise";
 import "~/index.css";
 
 const App = () => {
-  return <Noise />;
+  return <Galaxy />;
 };
 
 render(<App />, document.getElementById("root"));

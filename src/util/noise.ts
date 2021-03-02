@@ -50,10 +50,10 @@ const dotGridGradient = (ix: number, iy: number, x: number, y: number) => {
 };
 
 export const perlin2d = (x: number, y: number): number => {
-  const x0 = x;
-  const x1 = x0 + 1;
-  const y0 = y;
-  const y1 = y0 + 1;
+  const x0 = Math.floor(x);
+  const x1 = Math.ceil(x);
+  const y0 = Math.floor(y);
+  const y1 = Math.ceil(y);
 
   const sx = x - x0;
   const sy = y - y0;
