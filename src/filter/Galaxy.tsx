@@ -1,16 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { AlphaRange, generateColorHSLA, generateColorRGBA, RGBRange } from "./generateColor";
-
-type Color = {
-  readonly r: string;
-  readonly g: string;
-  readonly b: string;
-  readonly a: string;
-};
-
-interface Props {
-  readonly colors: Array<Color>;
-}
+import {
+  AlphaRange,
+  generateColorHSLA,
+  generateColorRGBA,
+  RGBRange,
+} from "../util/generateColor";
 
 /*
         gradient.addColorStop(0, "rgba(94, 26, 60, 0.99)");
@@ -25,45 +19,44 @@ const washedOutPallette = {
   red: { min: 94, max: 176 } as RGBRange,
   green: { min: 26, max: 89 } as RGBRange,
   blue: { min: 51, max: 60 } as RGBRange,
-  alpha: { min: 0.7, max: 0.9 } as AlphaRange,
+  alpha: { min: 0.3, max: 0.5 } as AlphaRange,
 };
 
-const color1 = generateColorRGBA({
-  red: washedOutPallette.red,
-  green: { min: 26, max: 89 },
-  blue: { min: 51, max: 60 },
-  alpha: { min: 0.7, max: 0.9 },
-});
-const color2 = generateColorRGBA({
-  red: { min: 94, max: 176 },
-  green: { min: 26, max: 89 },
-  blue: { min: 51, max: 60 },
-  alpha: { min: 0.7, max: 0.9 },
-});
-const color3 = generateColorRGBA({
-  red: { min: 94, max: 176 },
-  green: { min: 26, max: 89 },
-  blue: { min: 51, max: 60 },
-  alpha: { min: 0.7, max: 0.9 },
-});
+const nightSkyPallette = {
+  red: { min: 2, max: 10 } as RGBRange,
+  green: { min: 3, max: 20 } as RGBRange,
+  blue: { min: 30, max: 90 } as RGBRange,
+  alpha: { min: 0.8, max: 0.9 } as AlphaRange,
+}
 
-export const Galaxy = ({}: Props) => {
+
+
+export const Galaxy = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  console.log(color1, color2, color3);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas !== null) {
       const context = canvas.getContext("2d");
       if (context !== null) {
-        canvas.width = 300;
-        canvas.height = 300;
-        var gradient = context.createRadialGradient(0, 0, 0, 0, 0, 280);
-        gradient.addColorStop(0, color1);
-        gradient.addColorStop(0.3181818181818182, color2);
-        gradient.addColorStop(0.3383838383838384, color3);
-        gradient.addColorStop(0.6717171717171717, color2);
-        gradient.addColorStop(1, color1);
+        canvas.width = 800;
+        canvas.height = 600;
+
+        var gradient = context.createRadialGradient(0, 0, 0, 0, 0, 600);
+        gradient.addColorStop(colorStops[0], generateColorRGBA(nightSkyPallette));
+        gradient.addColorStop(colorStops[1], generateColorRGBA(nightSkyPallette));
+        gradient.addColorStop(colorStops[2], generateColorRGBA(nightSkyPallette));
+        gradient.addColorStop(colorStops[3], generateColorRGBA(nightSkyPallette));
+        gradient.addColorStop(colorStops[4], generateColorRGBA(nightSkyPallette));
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, 800, 600);
+
+        var gradient = context.createRadialGradient(0, 0, 0, 0, 0, 600);
+        gradient.addColorStop(colorStops[0], generateColorRGBA(washedOutPallette));
+        gradient.addColorStop(colorStops[1], generateColorRGBA(washedOutPallette));
+        gradient.addColorStop(colorStops[2], generateColorRGBA(washedOutPallette));
+        gradient.addColorStop(colorStops[3], generateColorRGBA(washedOutPallette));
+        gradient.addColorStop(colorStops[4], generateColorRGBA(washedOutPallette));
         context.fillStyle = gradient;
         context.fillRect(0, 0, 800, 600);
       }
@@ -71,8 +64,9 @@ export const Galaxy = ({}: Props) => {
   }, [canvasRef]);
 
   return (
-    <div>
-      <canvas ref={canvasRef}></canvas>
-    </div>
+    <canvas
+      style={{ width: "800", height: "600", padding: 0, margin: 0 }}
+      ref={canvasRef}
+    />
   );
 };
